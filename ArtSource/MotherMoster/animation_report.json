@@ -1,0 +1,171 @@
+{
+  "fps": 30,
+  "clips": [
+    {
+      "name": "Idle",
+      "frames": [
+        1,
+        97
+      ],
+      "duration": 3.2,
+      "loop": true,
+      "loop_seam_error": 0.0,
+      "min_ground_z": -0.00040797170368023217
+    },
+    {
+      "name": "Walk",
+      "frames": [
+        1,
+        37
+      ],
+      "duration": 1.2,
+      "loop": true,
+      "loop_seam_error": 0.0,
+      "min_ground_z": -0.00040793875814415514
+    },
+    {
+      "name": "Run",
+      "frames": [
+        1,
+        21
+      ],
+      "duration": 0.6666666666666666,
+      "loop": true,
+      "loop_seam_error": 0.0,
+      "min_ground_z": -0.00040787493344396353
+    },
+    {
+      "name": "Attack",
+      "frames": [
+        1,
+        37
+      ],
+      "duration": 1.2,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.00040791294304654
+    },
+    {
+      "name": "Stagger",
+      "frames": [
+        1,
+        25
+      ],
+      "duration": 0.8,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.00040793998050503433
+    },
+    {
+      "name": "Death",
+      "frames": [
+        1,
+        73
+      ],
+      "duration": 2.4,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": 0.003999943844974041
+    },
+    {
+      "name": "Attack_Sweep",
+      "frames": [
+        1,
+        34
+      ],
+      "duration": 1.1,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.0004079396021552384
+    },
+    {
+      "name": "Attack_Combo",
+      "frames": [
+        1,
+        49
+      ],
+      "duration": 1.6,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.0004079061036463827
+    },
+    {
+      "name": "Attack_Slam",
+      "frames": [
+        1,
+        46
+      ],
+      "duration": 1.5,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.0004079665523022413
+    }
+  ],
+  "bones_preserved": true,
+  "fbx_clips": [
+    {
+      "name": "MotherMoster_Rig|MotherMoster_Rig|MotherMoster_Attack",
+      "frames": [
+        1.0,
+        37.0
+      ]
+    },
+    {
+      "name": "MotherMoster_Rig|MotherMoster_Rig|MotherMoster_Attack_Combo",
+      "frames": [
+        1.0,
+        49.0
+      ]
+    },
+    {
+      "name": "MotherMoster_Rig|MotherMoster_Rig|MotherMoster_Attack_Slam",
+      "frames": [
+        1.0,
+        46.0
+      ]
+    },
+    {
+      "name": "MotherMoster_Rig|MotherMoster_Rig|MotherMoster_Attack_Sweep",
+      "frames": [
+        1.0,
+        34.0
+      ]
+    },
+    {
+      "name": "MotherMoster_Rig|MotherMoster_Rig|MotherMoster_Death",
+      "frames": [
+        1.0,
+        73.0
+      ]
+    },
+    {
+      "name": "MotherMoster_Rig|MotherMoster_Rig|MotherMoster_Idle",
+      "frames": [
+        1.0,
+        97.0
+      ]
+    },
+    {
+      "name": "MotherMoster_Rig|MotherMoster_Rig|MotherMoster_Run",
+      "frames": [
+        1.0,
+        21.0
+      ]
+    },
+    {
+      "name": "MotherMoster_Rig|MotherMoster_Rig|MotherMoster_Stagger",
+      "frames": [
+        1.0,
+        25.0
+      ]
+    },
+    {
+      "name": "MotherMoster_Rig|MotherMoster_Rig|MotherMoster_Walk",
+      "frames": [
+        1.0,
+        37.0
+      ]
+    }
+  ],
+  "fbx_roundtrip_passed": true
+}

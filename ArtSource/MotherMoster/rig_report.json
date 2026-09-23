@@ -1,0 +1,13 @@
+{
+  "vertices": 9137,
+  "bones": 54,
+  "deform_bones": 53,
+  "fallback_weight_vertices": 0,
+  "unweighted_vertices": 0,
+  "packed_images": [
+    "alien_monster_3d_model_metallic.JPEG",
+    "alien_monster_3d_model_roughness.JPEG",
+    "Color.jpg",
+    "Normal.png"
+  ]
+}

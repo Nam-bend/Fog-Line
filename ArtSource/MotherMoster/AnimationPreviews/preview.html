@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MotherMoster · Animation</title>
+<style>
+body{margin:0;background:#11161c;color:#e2e8f0;font:16px system-ui;display:grid;min-height:100vh;place-items:center}main{width:min(900px,94vw);padding:24px 0}h1{font-size:24px;margin:0 0 6px}p{color:#adb9c7;line-height:1.5}img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#1b242e;border-radius:12px}.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0}button,select{background:#243243;border:1px solid #46566c;border-radius:7px;color:inherit;padding:10px;font:inherit;cursor:pointer}input{flex:1;min-width:150px}output{font-variant-numeric:tabular-nums;min-width:110px}small{color:#adb9c7}
+</style>
+<main>
+<h1>MotherMoster · Chuyển động quái vật</h1>
+<p id="description">Hai tay lấy đà phía sau, quật mạnh về phía trước rồi thu lại. Trong góc nhìn này, hướng trước nằm bên trái màn hình.</p>
+<img id="view" src="AttackFrames/001.png" alt="Xem chuyển động MotherMoster từ góc bên">
+<div class="controls">
+<select id="clip" aria-label="Animation"><option value="Attack">Quật đôi</option><option value="Attack_Sweep">Quét ngang</option><option value="Attack_Combo">Combo trái–phải</option><option value="Attack_Slam">Bổ từ trên xuống</option><option value="Run">Chạy truy đuổi</option><option value="Idle">Đứng rình</option><option value="Walk">Đi săn</option></select>
+<button id="play">Tạm dừng</button>
+<select id="speed" aria-label="Tốc độ"><option value="1">Tốc độ thật · 1×</option><option value="0.5">Chậm · 0.5×</option><option value="0.25">Chậm · 0.25×</option></select>
+<input id="frame" aria-label="Khung hình" type="range" min="1" max="36" value="1"><output id="counter">1 / 36</output>
+</div>
+<small>Attack được phát lại để xem trước. Clip dùng trong game không lặp.</small>
+</main>
+<script>
+const lengths={Attack:36,Attack_Sweep:33,Attack_Combo:48,Attack_Slam:45,Idle:96,Walk:36,Run:20};
+const descriptions={Attack:'Hai tay lấy đà phía sau, quật mạnh đồng thời về phía trước rồi thu lại.',Attack_Sweep:'Xoắn thân lấy đà rồi quét hai tay ngang thành một vòng rộng.',Attack_Combo:'Tay trái đánh chéo xuống, nối ngay bằng tay phải; thân xoắn đổi chiều theo từng cú.',Attack_Slam:'Hai tay giơ cao, giữ nhịp lấy đà rồi bổ mạnh xuống cùng thân.',Idle:'Thân khom, thở chậm, đầu dò xét và xúc tu cử động lệch nhịp.',Walk:'Dáng đi săn thấp người, chân chống lâu và bước nâng ngắn.',Run:'Lao tới thấp người, sải chân rộng, tay chồm bắt và xúc tu lưng kéo về sau. Nhịp chạy nhanh hơn 20%.'};
+const view=document.getElementById('view'),clip=document.getElementById('clip'),slider=document.getElementById('frame'),counter=document.getElementById('counter'),play=document.getElementById('play'),speed=document.getElementById('speed');
+let playing=true,current=1,last=0,accumulated=0;
+const cache={};
+function preload(name){if(cache[name])return;cache[name]=Array.from({length:lengths[name]},(_,i)=>{const image=new Image();image.src=`${name}Frames/${String(i+1).padStart(3,'0')}.png`;return image;});}
+function show(){view.src=`${clip.value}Frames/${String(current).padStart(3,'0')}.png`;slider.value=current;counter.value=`${current} / ${lengths[clip.value]}`;}
+clip.onchange=()=>{current=1;accumulated=0;slider.max=lengths[clip.value];document.getElementById('description').textContent=descriptions[clip.value];preload(clip.value);show();};
+play.onclick=()=>{playing=!playing;play.textContent=playing?'Tạm dừng':'Phát';};
+slider.oninput=()=>{current=Number(slider.value);playing=false;play.textContent='Phát';show();};
+function tick(time){if(last&&playing){accumulated+=Math.min(time-last,100)*Number(speed.value);const step=1000/30;while(accumulated>=step){current=current%lengths[clip.value]+1;accumulated-=step;}show();}last=time;requestAnimationFrame(tick);}
+preload('Attack');requestAnimationFrame(tick);
+</script>
+</html>

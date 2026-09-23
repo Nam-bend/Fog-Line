@@ -1,0 +1,4 @@
+TraditionalDoubleBarrel_Mesh
+triangles=1712
+texture=64x64
+forward=Unity +Z

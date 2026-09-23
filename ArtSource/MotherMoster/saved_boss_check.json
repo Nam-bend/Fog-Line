@@ -1,0 +1,101 @@
+{
+  "direct_saved_file_check": true,
+  "rest_skeleton_unchanged": true,
+  "original_run_frames": [
+    1.0,
+    25.0
+  ],
+  "actions": [
+    {
+      "name": "MotherMoster_Attack",
+      "frames": [
+        1.0,
+        37.0
+      ],
+      "minimum_z": -0.00040796410758048296,
+      "endpoint_distance": 0.009051117843739048,
+      "maximum_vertex_step": 0.6810379942411715
+    },
+    {
+      "name": "MotherMoster_Attack_Combo",
+      "frames": [
+        1.0,
+        49.0
+      ],
+      "minimum_z": -0.00040796410758048296,
+      "endpoint_distance": 0.0,
+      "maximum_vertex_step": 0.40163750186377234
+    },
+    {
+      "name": "MotherMoster_Attack_Slam",
+      "frames": [
+        1.0,
+        46.0
+      ],
+      "minimum_z": -0.0004079675709363073,
+      "endpoint_distance": 0.007740209228416782,
+      "maximum_vertex_step": 0.42164116688351233
+    },
+    {
+      "name": "MotherMoster_Attack_Sweep",
+      "frames": [
+        1.0,
+        34.0
+      ],
+      "minimum_z": -0.00040801067370921373,
+      "endpoint_distance": 0.002502970432413993,
+      "maximum_vertex_step": 0.553241138983865
+    },
+    {
+      "name": "MotherMoster_Death",
+      "frames": [
+        1.0,
+        73.0
+      ],
+      "minimum_z": 0.003999943844974041,
+      "endpoint_distance": 1.2094031497986877,
+      "maximum_vertex_step": 0.14742711390596738
+    },
+    {
+      "name": "MotherMoster_Idle",
+      "frames": [
+        1.0,
+        97.0
+      ],
+      "minimum_z": -0.00040801017894409597,
+      "endpoint_distance": 0.0,
+      "maximum_vertex_step": 0.006256770852160572
+    },
+    {
+      "name": "MotherMoster_Run",
+      "frames": [
+        1.0,
+        19.0
+      ],
+      "minimum_z": -0.0004079026111867279,
+      "endpoint_distance": 0.0,
+      "maximum_vertex_step": 0.08013130459375134
+    },
+    {
+      "name": "MotherMoster_Stagger",
+      "frames": [
+        1.0,
+        25.0
+      ],
+      "minimum_z": -0.000407937855925411,
+      "endpoint_distance": 0.008632850590584233,
+      "maximum_vertex_step": 0.24728536480372065
+    },
+    {
+      "name": "MotherMoster_Walk",
+      "frames": [
+        1.0,
+        37.0
+      ],
+      "minimum_z": -0.0004079790960531682,
+      "endpoint_distance": 0.0,
+      "maximum_vertex_step": 0.026460451094361626
+    }
+  ],
+  "nine_preview_scenes_valid": true
+}

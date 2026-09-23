@@ -1,0 +1,13 @@
+{
+  "sweep_horizontal_travel": {
+    "L": 1.2648738026618958,
+    "R": 1.6514041423797607
+  },
+  "slam_vertical_travel": {
+    "L": 1.2609975934028625,
+    "R": 1.3918804675340652
+  },
+  "combo_left_first_reach": 0.2600724697113037,
+  "combo_right_second_reach": 0.4843275547027588,
+  "root_motion_in_place": true
+}

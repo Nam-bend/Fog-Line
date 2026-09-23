@@ -1,0 +1,105 @@
+{
+  "fps": 30,
+  "clips": [
+    {
+      "name": "Idle",
+      "frames": [
+        1,
+        97
+      ],
+      "duration": 3.2,
+      "loop": true,
+      "loop_seam_error": 0.0,
+      "min_ground_z": -0.00040801017894409597
+    },
+    {
+      "name": "Walk",
+      "frames": [
+        1,
+        37
+      ],
+      "duration": 1.2,
+      "loop": true,
+      "loop_seam_error": 0.0,
+      "min_ground_z": -0.0004079790960531682
+    },
+    {
+      "name": "Run",
+      "frames": [
+        1,
+        19
+      ],
+      "duration": 0.6,
+      "loop": true,
+      "loop_seam_error": 0.0,
+      "min_ground_z": -0.0004079026111867279
+    },
+    {
+      "name": "Attack",
+      "frames": [
+        1,
+        37
+      ],
+      "duration": 1.2,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.00040796410758048296
+    },
+    {
+      "name": "Stagger",
+      "frames": [
+        1,
+        25
+      ],
+      "duration": 0.8,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.000407937855925411
+    },
+    {
+      "name": "Death",
+      "frames": [
+        1,
+        73
+      ],
+      "duration": 2.4,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": 0.003999943844974041
+    },
+    {
+      "name": "Attack_Sweep",
+      "frames": [
+        1,
+        34
+      ],
+      "duration": 1.1,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.00040801067370921373
+    },
+    {
+      "name": "Attack_Combo",
+      "frames": [
+        1,
+        49
+      ],
+      "duration": 1.6,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.00040796410758048296
+    },
+    {
+      "name": "Attack_Slam",
+      "frames": [
+        1,
+        46
+      ],
+      "duration": 1.5,
+      "loop": false,
+      "loop_seam_error": null,
+      "min_ground_z": -0.0004079675709363073
+    }
+  ],
+  "bones_preserved": true
+}

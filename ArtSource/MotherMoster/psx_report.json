@@ -1,0 +1,16 @@
+{
+  "source_triangles": 18274,
+  "triangles": 1200,
+  "vertices": 600,
+  "bones": 49,
+  "bone_positions_preserved": true,
+  "texture_size": [
+    256,
+    256
+  ],
+  "fallback_weight_vertices": 0,
+  "max_influences": 4,
+  "test_pose_max_edge_stretch": 1.2060679408171342,
+  "test_pose_edges_over_2x": 0,
+  "fbx_roundtrip_passed": true
+}
