@@ -15,6 +15,13 @@ public sealed class ShotgunAmmo
     }
 
     public Chamber GetChamber(int index) => chambers[index];
+    public void Restore(int left, int right, int reserve)
+    {
+        chambers[0] = (Chamber)System.Math.Max(0, System.Math.Min(2, left));
+        chambers[1] = (Chamber)System.Math.Max(0, System.Math.Min(2, right));
+        Reserve = System.Math.Max(0, reserve);
+        nextBarrel = 0;
+    }
 
     public int Fire()
     {

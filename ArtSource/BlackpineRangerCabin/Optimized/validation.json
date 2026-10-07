@@ -1,0 +1,15 @@
+{
+  "before_triangles": 5994,
+  "triangles": 1844,
+  "mesh_polygons": 885,
+  "reduction_percent": 69.24,
+  "export_meshes": 2,
+  "texture_files": [
+    "C:\\Users\\namphung\\FPS\\ArtSource\\BlackpineRangerCabin\\Optimized\\BP_Roof_128.png",
+    "C:\\Users\\namphung\\FPS\\ArtSource\\BlackpineRangerCabin\\Optimized\\BP_Sign_256x32.png",
+    "C:\\Users\\namphung\\FPS\\ArtSource\\BlackpineRangerCabin\\Optimized\\BP_Stone_128.png",
+    "C:\\Users\\namphung\\FPS\\ArtSource\\BlackpineRangerCabin\\Optimized\\BP_Trim_128.png",
+    "C:\\Users\\namphung\\FPS\\ArtSource\\BlackpineRangerCabin\\Optimized\\BP_Wood_256.png"
+  ],
+  "verification": "PASS: FBX reimport triangle counts, UVs, 2 meshes and 5 external texture files"
+}

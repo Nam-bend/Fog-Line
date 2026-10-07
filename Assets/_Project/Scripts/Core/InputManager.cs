@@ -31,11 +31,13 @@ public class InputManager : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext context)
     {
+        if (ForestStoryDirector.BlocksInput) return;
         if (playerMotor != null && (playerHealth == null || !playerHealth.IsDead))
             playerMotor.Jump();
     }
 
     void Update(){
+        if (ForestStoryDirector.BlocksInput) return;
         if (playerHealth != null && playerHealth.IsDead) return;
         // CharacterController has no Rigidbody interpolation. Move and look
         // together each rendered frame, before the weapon's LateUpdate.

@@ -19,8 +19,19 @@ public class EnemyAI : MonoBehaviour
     private float strikeTime;
     private float nextPathTime;
     private bool windingUp;
+    private EnemyNavigation navigation;
+    private ForestCreature storyPerception;
+    private Vector3 lastSeen;
+    private float rememberUntil, nextSense;
+    private bool targetVisible;
     private float staggerUntil;
     private bool HasAnimator => animator != null && animator.isActiveAndEnabled && animator.runtimeAnimatorController != null;
+
+    public void CancelPendingAttack()
+    {
+        windingUp = false;
+        if (HasAnimator) animator.ResetTrigger("Attack");
+    }
 
     public void ReactToHit(float duration)
     {
@@ -42,6 +53,9 @@ public class EnemyAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
+        navigation=GetComponent<EnemyNavigation>();
+        if(navigation==null) navigation=gameObject.AddComponent<EnemyNavigation>();
+        storyPerception=GetComponent<ForestCreature>();
         agent.stoppingDistance = attackRange * 0.8f;
         SetTarget(target != null ? target : FindFirstObjectByType<PlayerHealth>());
     }
@@ -62,7 +76,20 @@ public class EnemyAI : MonoBehaviour
             ? targetController.bounds.center : target.transform.position + Vector3.up;
         Vector3 eye = transform.position + Vector3.up;
         float distance = Vector3.Distance(eye, aimPoint);
-        bool canStrike = distance <= attackRange && HasLineOfSight(eye, aimPoint);
+        if(Time.time>=nextSense)
+        {
+            nextSense=Time.time+.15f;
+            Vector3 flat=Vector3.ProjectOnPlane(aimPoint-eye,Vector3.up);
+            targetVisible=distance<detectionRange && Vector3.Angle(transform.forward,flat)<65f && HasLineOfSight(eye,aimPoint);
+            if(targetVisible) { lastSeen=target.transform.position; rememberUntil=Time.time+5f; }
+        }
+        if(storyPerception==null && !targetVisible)
+        {
+            CancelPendingAttack();
+            if(Time.time<rememberUntil) navigation.Move(lastSeen,.35f); else navigation.Stop();
+            SetMovingAnimation(navigation.Moving); return;
+        }
+        bool canStrike = IsTargetInAttackRange(aimPoint) && HasLineOfSight(eye, aimPoint);
 
         if (windingUp)
         {
@@ -84,7 +111,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         agent.isStopped = distance > detectionRange || canStrike;
-        SetMovingAnimation(!agent.isStopped);
+        SetMovingAnimation(navigation.Moving);
         if (canStrike)
         {
             FaceTarget();
@@ -98,7 +125,7 @@ public class EnemyAI : MonoBehaviour
         else if (!agent.isStopped && Time.time >= nextPathTime)
         {
             nextPathTime = Time.time + 0.2f;
-            agent.SetDestination(target.transform.position);
+            navigation.Move(target.transform.position,attackRange*.8f);
         }
     }
 
@@ -117,7 +144,17 @@ public class EnemyAI : MonoBehaviour
         if (target == null || !target.isActiveAndEnabled || target.IsDead) return;
         Vector3 aim = targetController != null ? targetController.bounds.center : target.transform.position + Vector3.up;
         Vector3 eye = transform.position + Vector3.up;
-        if (Vector3.Distance(eye, aim) <= attackRange && HasLineOfSight(eye, aim)) target.TakeDamage(damage);
+        if (IsTargetInAttackRange(aim) && HasLineOfSight(eye, aim)) target.TakeDamage(damage);
+    }
+
+    // Use horizontal contact distance for melee. Comparing eye-to-center distance
+    // made hits fail on slopes and when the player was close to the enemy's side.
+    private bool IsTargetInAttackRange(Vector3 aim)
+    {
+        Vector3 delta = aim - transform.position;
+        delta.y = 0f;
+        float targetRadius = targetController != null ? targetController.radius : .5f;
+        return Mathf.Abs(aim.y-(transform.position.y+1f))<1.5f && delta.magnitude <= attackRange + targetRadius * .35f;
     }
 
     private bool HasLineOfSight(Vector3 origin, Vector3 destination)

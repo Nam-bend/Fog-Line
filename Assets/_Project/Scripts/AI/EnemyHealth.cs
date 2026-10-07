@@ -9,6 +9,7 @@ public sealed class EnemyHealth : MonoBehaviour
     [SerializeField, Min(0f)] private float hitStaggerDuration = 0.45f;
     public float CurrentHealth { get; private set; }
     public bool IsDead => CurrentHealth <= 0f;
+    public void RestoreHealth(float health) => CurrentHealth = Mathf.Clamp(health, 0f, maxHealth);
     private Transform visual;
     private Vector3 restPosition;
     private Quaternion restRotation;
@@ -36,6 +37,8 @@ public sealed class EnemyHealth : MonoBehaviour
             AlertSystem.RaiseEnemyAlerted(transform.position);
         }
         CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
+        var storyCreature = GetComponent<ForestCreature>();
+        if (storyCreature != null) storyCreature.Hit(hitStaggerDuration);
         var ai = GetComponent<EnemyAI>();
         if (reaction != null) StopCoroutine(reaction);
         if (!IsDead)
@@ -49,6 +52,8 @@ public sealed class EnemyHealth : MonoBehaviour
         if (agent != null) agent.enabled = false;
         foreach (Collider body in GetComponentsInChildren<Collider>()) body.enabled = false;
         GameManager.IncrementKillCount();
+        if (ForestStoryDirector.Instance != null)
+            ForestStoryDirector.Instance.EnemyKilled(storyCreature != null ? storyCreature.storyId : "", transform.position);
         AlertSystem.RaiseEnemyAlerted(transform.position);
         reaction = StartCoroutine(AnimateDeath());
     }

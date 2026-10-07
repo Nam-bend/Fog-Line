@@ -41,6 +41,16 @@ public sealed class FirstPersonWeapon : MonoBehaviour
     public bool IsReloading => action != null && action.IsReloading;
     public int RoundsRemaining => action != null ? action.Ammo.Loaded : ShotgunAmmo.Capacity;
     public int ReserveAmmo => action != null ? action.Ammo.Reserve : startingReserveAmmo;
+    public void SaveStoryAmmo(ForestStoryState state)
+    {
+        state.left = (int)action.Ammo.GetChamber(0); state.right = (int)action.Ammo.GetChamber(1);
+        state.reserve = action.Ammo.Reserve;
+    }
+    public void RestoreStoryAmmo(ForestStoryState state)
+    {
+        action.CancelReload(); action.Ammo.Restore(state.left, state.right, state.reserve);
+        ResetPose(); RefreshUI();
+    }
 
     private void Awake()
     {
@@ -124,6 +134,8 @@ public sealed class FirstPersonWeapon : MonoBehaviour
 
     private void ReadInput()
     {
+        if (ForestStoryDirector.BlocksInput) return;
+        if (ForestStoryDirector.Instance != null && ForestStoryDirector.Instance.PowerRunning) return;
         if (!acceptPlayerInput) return;
         if (Mouse.current?.leftButton.wasPressedThisFrame == true) PlayFire();
         if (Keyboard.current?.rKey.wasPressedThisFrame == true) PlayReload();
@@ -246,6 +258,7 @@ public sealed class FirstPersonWeapon : MonoBehaviour
     {
         Vector3 origin = muzzle.position + weaponView.right * (barrel == 0 ? -0.036f : 0.036f);
         hitDetection.Fire(aimCamera.transform, origin, transform, pelletCount, spreadDegrees, damage);
+        ForestNoise.Emit(transform.position, 45f);
         PlayHitFeedback(origin);
     }
 

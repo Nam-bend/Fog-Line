@@ -10,6 +10,10 @@ public class PlayerHealth : MonoBehaviour
     public float CurrentHealth { get; private set; }
     public float MaxHealth => maxHealth;
     public bool IsDead => CurrentHealth <= 0f;
+    public void RestoreStoryHealth(float health)
+    {
+        CurrentHealth = Mathf.Clamp(health, 1f, maxHealth); RefreshUI(true);
+    }
 
     private PlayerUI playerUI;
 

@@ -31,8 +31,9 @@ public class PlayerInteract : MonoBehaviour
         //create ray at the center of the camera ,shooting outwards
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         Interactable target = null;
-        if(Physics.Raycast(ray, out hitInfo, distance, mask)){
-            target = hitInfo.collider.GetComponentInParent<Interactable>();
+        if(Physics.Raycast(ray, out hitInfo, distance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)){
+            if ((mask.value & (1 << hitInfo.collider.gameObject.layer)) != 0)
+                target = hitInfo.collider.GetComponentInParent<Interactable>();
         }
         if (playerUI != null) playerUI.UpdatePrompt(target != null ? target.promptMessage : string.Empty);
         if (pressed && target != null) target.BaseInteract();

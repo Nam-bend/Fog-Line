@@ -128,7 +128,7 @@ public sealed class MotherAI : MonoBehaviour
         {
             lostSightTime = 0f;
             lastKnownPosition = targetPoint;
-            if (Vector3.Distance(eye, targetPoint) <= attackRange)
+            if (IsTargetInAttackRange(targetPoint))
             {
                 StopAgent();
                 SetMovingAnimation(false);
@@ -190,13 +190,14 @@ public sealed class MotherAI : MonoBehaviour
     private bool TryPickSearchPoint(out Vector3 point)
     {
         Vector2 offset = Random.insideUnitCircle * searchRadius;
+        var filter = new NavMeshQueryFilter { agentTypeID = agent.agentTypeID, areaMask = agent.areaMask };
         if (NavMesh.SamplePosition(searchCenter + new Vector3(offset.x, 0f, offset.y),
-            out NavMeshHit hit, searchRadius, NavMesh.AllAreas))
+            out NavMeshHit hit, searchRadius, filter))
         {
             point = hit.position;
             return true;
         }
-        bool found = NavMesh.SamplePosition(searchCenter, out hit, searchRadius, NavMesh.AllAreas);
+        bool found = NavMesh.SamplePosition(searchCenter, out hit, searchRadius, filter);
         point = found ? hit.position : searchCenter;
         return found;
     }
@@ -266,8 +267,18 @@ public sealed class MotherAI : MonoBehaviour
             || target == null || !target.isActiveAndEnabled || target.IsDead) return;
         Vector3 eye = transform.position + Vector3.up;
         Vector3 aim = GetTargetPoint();
-        if (Vector3.Distance(eye, aim) <= attackRange && HasLineOfSight(eye, aim))
+        if (IsTargetInAttackRange(aim) && HasLineOfSight(eye, aim))
             target.TakeDamage(attackDamage);
+    }
+
+    // Melee contact is judged on the ground plane and includes a small part of
+    // the player's capsule. This keeps hits consistent on slopes and at corners.
+    private bool IsTargetInAttackRange(Vector3 targetPoint)
+    {
+        Vector3 delta = targetPoint - transform.position;
+        delta.y = 0f;
+        float targetRadius = targetController != null ? targetController.radius : .5f;
+        return delta.magnitude <= attackRange + targetRadius * .35f;
     }
 
     private void FaceTarget()

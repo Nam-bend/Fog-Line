@@ -1,0 +1,20 @@
+{
+  "body_m": [
+    6,
+    8
+  ],
+  "porch_depth_m": 2,
+  "porch_posts": 4,
+  "stairs": 3,
+  "export_meshes": 9,
+  "triangles_including_letters": 5994,
+  "fbx_bytes": 119036,
+  "render": "BlackpineCabin_reference.png",
+  "note": "Reference asset. Unity integration/colliders/navigation not performed.",
+  "fbx_roundtrip": "PASS: 9 meshes, 5994 triangles, material slots and metre scale preserved",
+  "overall_bounds_m": [
+    6.940000057220459,
+    11.477831363677979,
+    6.271953038871288
+  ]
+}

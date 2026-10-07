@@ -10,6 +10,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject sceneEnemy;
     [SerializeField, Min(3f)] private float spawnDistance = 8f;
     private Material enemyMaterial;
+    private string spawnFailure;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void EnsureSampleSceneSpawner()
@@ -48,10 +49,26 @@ public class EnemySpawner : MonoBehaviour
             motherIgnored[i] = motherModifier.ignoreFromBuild;
             motherModifier.ignoreFromBuild = true;
         }
-        var surface = gameObject.AddComponent<NavMeshSurface>();
-        surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
-        Physics.SyncTransforms();
-        surface.BuildNavMesh();
+        var existingAgent = sceneEnemy != null ? sceneEnemy.GetComponent<NavMeshAgent>() : null;
+        int agentType = existingAgent != null ? existingAgent.agentTypeID : 0;
+        NavMeshSurface surface = null;
+        foreach (var candidate in FindObjectsByType<NavMeshSurface>(FindObjectsSortMode.None))
+            if (candidate.agentTypeID == agentType)
+            {
+                surface = candidate;
+                if (surface.navMeshData != null) break;
+            }
+        if (surface == null || surface.navMeshData == null)
+        {
+            if (surface == null)
+            {
+                surface = gameObject.AddComponent<NavMeshSurface>();
+                surface.agentTypeID = agentType;
+            }
+            surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
+            Physics.SyncTransforms();
+            surface.BuildNavMesh();
+        }
         modifier.ignoreFromBuild = previouslyIgnored;
         for (int i = 0; i < mothers.Length; i++)
         {
@@ -59,13 +76,16 @@ public class EnemySpawner : MonoBehaviour
             mothers[i].SetTarget(player);
             var motherAgent = mothers[i].GetComponent<NavMeshAgent>();
             if (motherAgent != null && motherAgent.enabled
-                && NavMesh.SamplePosition(mothers[i].transform.position, out NavMeshHit floor, 4f, motherAgent.areaMask))
+                && EnemySpawnPlacement.TryFloorNav(mothers[i].transform.position, player.transform,
+                    mothers[i].transform,
+                    new NavMeshQueryFilter { agentTypeID = motherAgent.agentTypeID, areaMask = motherAgent.areaMask },
+                    out NavMeshHit floor, 4f))
                 motherAgent.Warp(floor.position);
         }
 
         if (!TrySpawnPosition(out Vector3 position))
         {
-            Debug.LogError("No reachable floor found for the enemy near Player.", this);
+            Debug.LogError("Enemy spawn failed: " + spawnFailure, this);
             return;
         }
 
@@ -93,6 +113,12 @@ public class EnemySpawner : MonoBehaviour
 
         var agent = enemy.GetComponent<NavMeshAgent>();
         if (agent == null) agent = enemy.AddComponent<NavMeshAgent>();
+        if (!agent.enabled) agent.enabled = true;
+        if (!agent.Warp(position))
+        {
+            Debug.LogError($"Enemy could not attach to NavMesh at {position} (agent {agent.agentTypeID}).", enemy);
+            return;
+        }
         agent.height = 2f;
         agent.radius = 0.4f;
         agent.speed = 3f;
@@ -121,43 +147,16 @@ public class EnemySpawner : MonoBehaviour
 
     private bool TrySpawnPosition(out Vector3 position)
     {
-        position = default;
-        if (!NavMesh.SamplePosition(player.transform.position, out NavMeshHit start, 4f, NavMesh.AllAreas))
-            return false;
-        var path = new NavMeshPath();
-        if (sceneEnemy != null
-            && NavMesh.SamplePosition(sceneEnemy.transform.position, out NavMeshHit placed, 3f, NavMesh.AllAreas)
-            && NavMesh.CalculatePath(placed.position, start.position, NavMesh.AllAreas, path)
-            && path.status == NavMeshPathStatus.PathComplete)
-        {
-            position = placed.position;
-            return true;
-        }
+        var agent = sceneEnemy != null ? sceneEnemy.GetComponent<NavMeshAgent>() : null;
+        var filter = new NavMeshQueryFilter { agentTypeID = agent != null ? agent.agentTypeID : 0,
+            areaMask = agent != null ? agent.areaMask : NavMesh.AllAreas };
+        var controller = player.GetComponent<CharacterController>();
+        Vector3 feet = controller != null ? controller.bounds.center - Vector3.up * controller.bounds.extents.y
+            : player.transform.position;
         var camera = player.GetComponentInChildren<Camera>();
         Vector3 forward = camera != null ? camera.transform.forward : player.transform.forward;
-        forward.y = 0f;
-        if (forward.sqrMagnitude < 0.01f) forward = player.transform.forward;
-        // Prefer an unobstructed spot in front of the camera, then try other directions.
-        for (int attempt = 0; attempt < 2; attempt++)
-        for (int i = 0; i < 8; i++)
-        {
-            Vector3 direction = Quaternion.Euler(0f, i * 45f, 0f) * forward;
-            direction.y = 0f;
-            Vector3 candidate = start.position + direction.normalized * spawnDistance;
-            if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, 3f, NavMesh.AllAreas)
-                && Vector3.Distance(start.position, hit.position) >= 3f
-                && NavMesh.CalculatePath(hit.position, start.position, NavMesh.AllAreas, path)
-                && path.status == NavMeshPathStatus.PathComplete)
-            {
-                Vector3 eye = camera != null ? camera.transform.position : start.position + Vector3.up;
-                if (attempt == 0 && Physics.Linecast(eye, hit.position + Vector3.up,
-                        Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
-                    continue;
-                position = hit.position;
-                return true;
-            }
-        }
-        return false;
+        return EnemySpawnPlacement.TryFind(feet, forward, player.transform,
+            sceneEnemy != null ? sceneEnemy.transform : null, spawnDistance, filter, out position, out spawnFailure);
     }
 
     private void OnDestroy()
